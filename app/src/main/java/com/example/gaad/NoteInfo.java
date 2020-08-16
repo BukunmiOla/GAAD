@@ -14,6 +14,24 @@ public final class NoteInfo implements Parcelable {
         mText = text;
     }
 
+    protected NoteInfo(Parcel in) {
+        mCourse = in.readParcelable(CourseInfo.class.getClassLoader());
+        mTitle = in.readString();
+        mText = in.readString();
+    }
+
+    public static final Creator<NoteInfo> CREATOR = new Creator<NoteInfo>() {
+        @Override
+        public NoteInfo createFromParcel(Parcel in) {
+            return new NoteInfo(in);
+        }
+
+        @Override
+        public NoteInfo[] newArray(int size) {
+            return new NoteInfo[size];
+        }
+    };
+
     public CourseInfo getCourse() {
         return mCourse;
     }

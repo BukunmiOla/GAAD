@@ -15,7 +15,12 @@ import android.widget.ListView;
 
 import java.util.List;
 
+import static com.example.gaad.MainActivity.NOTE_POSITION;
+import static com.example.gaad.MainActivity.POSITION_NOT_SET;
+
 public class NoteListActivity extends AppCompatActivity {
+
+    private ArrayAdapter<NoteInfo> mAdapterNotes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +34,8 @@ public class NoteListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                Intent intent = new Intent(NoteListActivity.this, MainActivity.class);
+                startActivity(intent);
 
             }
         });
@@ -36,16 +43,24 @@ public class NoteListActivity extends AppCompatActivity {
         intializeDisplayContent();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mAdapterNotes.notifyDataSetChanged();
+    }
+
     private void intializeDisplayContent() {
-        ListView listNotes = findViewById(R.id.noteList);
+        final ListView listNotes = findViewById(R.id.noteList);
         List<NoteInfo> notes= DataManager.getInstance().getNotes();
-        ArrayAdapter<NoteInfo> adapterNotes = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, notes);
-        listNotes.setAdapter(adapterNotes);
+        mAdapterNotes = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, notes);
+        listNotes.setAdapter(mAdapterNotes);
 
         listNotes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(NoteListActivity.this, MainActivity.class);
+//                NoteInfo note = (NoteInfo) listNotes.getItemAtPosition(position);
+                intent.putExtra(MainActivity.NOTE_POSITION,position);
                 startActivity(intent);
             }
         });
